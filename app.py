@@ -56,7 +56,7 @@
 #             connection = create_db_connection()  # You can add this to check DB connection
 #             if connection:
 #                 print("Database connection successful.")
-            
+
 #             print("Creating tables...")
 #             db.create_all()  # Create tables
 #             print("Tables created successfully!")
@@ -68,6 +68,7 @@ from flask import Flask
 from views import views  # Import the views Blueprint
 from routes import routes  # Import the routes Blueprint
 from db_config import Config  # Import your configuration class
+import mysql.connector
 
 # Create the Flask app instance
 app = Flask(__name__)
@@ -77,13 +78,44 @@ app.config.from_object(Config)
 
 # Register the Blueprints
 app.register_blueprint(views)  # No URL prefix
-app.register_blueprint(routes, url_prefix='/routes')  # URL prefix for routes Blueprint
+app.register_blueprint(routes, url_prefix='/routes')
+
 
 # Define a default route
 @app.route('/')
 def home():
-    return "Welcome to the Blood Donation System!"
+    db_status = Config.test_db_connection()
+    return f"Welcome to the Blood Donation System!<br>{db_status}"
+
+
+def init_db():
+    print("ascheeee")
+    try:
+        conn = mysql.connector.connect(
+            host=app.config['DB_HOST'],
+            user=app.config['DB_USER'],
+            password=app.config['DB_PASSWORD'],
+            database=app.config['DB_NAME']
+        )
+        cursor = conn.cursor()
+
+        # Read and execute SQL script
+        with open('blood_donation_system.sql', 'r') as f:
+            sql_script = f.read()
+            cursor.execute(sql_script)
+
+        conn.commit()  # Commit the changes
+        print("Database initialized successfully!")
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
 
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)
+    init_db()

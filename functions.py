@@ -39,6 +39,20 @@ def add_donation(db, donor_id, donation_date, donation_amount):
     db.execute(query, (donor_id, donation_date, donation_amount))
     db.commit()
 
+
+
+
+def add_donor(db, first_name, last_name, date_of_birth, blood_type, last_donated):
+    query = """
+    INSERT INTO donors (first_name, last_name, date_of_birth, blood_type, last_donated)
+    VALUES (%s, %s, %s, %s, %s)
+    """
+    db.execute(query, (first_name, last_name, date_of_birth, blood_type, last_donated))
+    db.commit()
+
+
+
+
 def update_blood_inventory(db, blood_type, units):
     query = """
     UPDATE blood_bank SET total_units = total_units + %s
@@ -46,3 +60,4 @@ def update_blood_inventory(db, blood_type, units):
     """
     db.execute(query, (units, blood_type))
     db.commit()
+
