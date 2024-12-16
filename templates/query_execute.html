@@ -1,0 +1,53 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="container mx-auto max-w-4xl gap-4">
+        <!-- Query Input Section -->
+        <div>
+            <label for="query-input" class="block mb-2 text-sm font-medium text-gray-900">Put Your Query Here</label>
+            <textarea id="query-input" rows="4"
+                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Write your thoughts here..."></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" id="execute-query"
+                class="mt-2 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none">
+            Submit Query
+        </button>
+
+        <div class="grid grid-cols-2 mt-6">
+            <div>
+                <h2 class="mb-2 text-lg font-semibold text-gray-900">Existing Tables</h2>
+                <ul class="max-w-md space-y-2 text-gray-400 list-inside">
+                    {% for table in table_names %}
+                        <li>
+                            <button type="button" id="{{ table }}"
+                                    class="table-btn py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">
+                                {{ table }}
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div>
+                <label for="columns" class="block mb-2 text-sm font-medium text-gray-900">Columns of Selected
+                    Table</label>
+                <textarea id="columns" rows="8"
+                          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                          readonly></textarea>
+            </div>
+        </div>
+
+        <!-- Result Table Section -->
+        <div id="query-result" class="mt-6">
+            <!-- The resulting table will be inserted here by JS -->
+        </div>
+    </div>
+
+
+    <script src="../static/js/get_columns.js" type="text/javascript"></script>
+    <script src="../static/js/query_handler.js" type="text/javascript"></script>
+{% endblock %}
+
+{#    <script src="{{ url_for('static', filename='js/get_columns.js') }}"></script>#}
